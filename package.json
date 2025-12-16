@@ -13,6 +13,7 @@
     "build": "tsc && vite build && electron-builder",
     "build:local": "./scripts/build.sh",
     "build:deb": "tsc && vite build && electron-builder --linux deb",
+    "build:ci": "./scripts/build-ci.sh",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

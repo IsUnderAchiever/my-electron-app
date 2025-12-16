@@ -32,7 +32,10 @@ jobs:
       run: npm ci
       
     - name: Build application
-      run: npm run build
+      run: npm run build:ci
+      env:
+        ELECTRON_IS_DEV: 0
+        CI: true
       
     - name: List release files
       run: ls -la release/*/

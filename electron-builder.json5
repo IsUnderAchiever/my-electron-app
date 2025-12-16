@@ -35,4 +35,5 @@
     vendor: "Your Company",
     description: "An Electron application with React and Vite",
   },
+  publish: null,
 }
