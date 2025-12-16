@@ -1,0 +1,70 @@
+name: Build and Release Debian Package
+
+on:
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y rpm
+
+    - name: Install npm dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run build
+      
+    - name: List release files
+      run: ls -la release/*/
+      
+    - name: Upload deb artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: debian-package
+        path: release/*/My\ Electron\ App-Linux-*.deb
+        if-no-files-found: error
+        
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/*/My\ Electron\ App-Linux-*.deb
+        draft: true
+        prerelease: false
+        name: Release ${{ github.ref_name }}
+        body: |
+          ## Changes in this release
+          
+          - Debian package for My Electron App
+          
+          ## Installation
+          
+          ```bash
+          # Download the .deb file and install it
+          sudo dpkg -i "My Electron App-Linux-*.deb"
+          
+          # If there are missing dependencies, run:
+          sudo apt-get install -f
+          ```
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

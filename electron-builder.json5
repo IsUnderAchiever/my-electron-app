@@ -28,8 +28,11 @@
     deleteAppDataOnUninstall: false,
   },
   linux: {
-    target: ["AppImage", "deb"],
+    target: ["deb"],
     artifactName: "${productName}-Linux-${version}.${ext}",
     category: "Utility",
+    maintainer: "Your Name <your.email@example.com>",
+    vendor: "Your Company",
+    description: "An Electron application with React and Vite",
   },
 }
